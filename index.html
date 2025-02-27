@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPPO Style Calculator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e3e3e3, #ffffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .calculator {
+            width: 320px;
+            padding: 20px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        #display {
+            width: 100%;
+            height: 60px;
+            text-align: right;
+            font-size: 2rem;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #f5f5f5;
+            box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .btn-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn {
+            height: 60px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 30px;
+            border: none;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: 0.2s;
+        }
+        .btn-light { background: white; color: #333; }
+        .btn-dark { background: #5c5c5c; color: white; }
+        .btn-success { background: #4caf50; color: white; }
+        .btn:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" readonly>
+        <div class="btn-container">
+            <button class="btn btn-danger" onclick="clearDisplay()">C</button>
+            <button class="btn btn-warning" onclick="deleteLast()">⌫</button>
+            <button class="btn btn-dark" onclick="appendToDisplay('%')">%</button>
+            <button class="btn btn-dark" onclick="appendToDisplay('/')">÷</button>
+
+            <button class="btn btn-light" onclick="appendToDisplay('7')">7</button>
+            <button class="btn btn-light" onclick="appendToDisplay('8')">8</button>
+            <button class="btn btn-light" onclick="appendToDisplay('9')">9</button>
+            <button class="btn btn-dark" onclick="appendToDisplay('*')">×</button>
+
+            <button class="btn btn-light" onclick="appendToDisplay('4')">4</button>
+            <button class="btn btn-light" onclick="appendToDisplay('5')">5</button>
+            <button class="btn btn-light" onclick="appendToDisplay('6')">6</button>
+            <button class="btn btn-dark" onclick="appendToDisplay('-')">-</button>
+
+            <button class="btn btn-light" onclick="appendToDisplay('1')">1</button>
+            <button class="btn btn-light" onclick="appendToDisplay('2')">2</button>
+            <button class="btn btn-light" onclick="appendToDisplay('3')">3</button>
+            <button class="btn btn-dark" onclick="appendToDisplay('+')">+</button>
+            
+            <button class="btn btn-light" onclick="appendToDisplay('00')">00</button>        
+            <button class="btn btn-light" onclick="appendToDisplay('0')">0</button>
+            <button class="btn btn-light" onclick="appendToDisplay('.')">.</button>
+            <button class="btn btn-success" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById("display");
+
+        // Append value to display (Prevents multiple operators in a row)
+        const appendToDisplay = (value) => {
+            const lastChar = display.value.slice(-1);
+            const operators = ["+", "-", "*", "/", "%"];
+
+            if (operators.includes(value) && operators.includes(lastChar)) {
+                return; // Prevents multiple operators in a row (e.g., ++, //)
+            }
+            display.value += value;
+        };
+
+        // Clear Display
+        const clearDisplay = () => (display.value = "");
+
+        // Delete Last Character
+        const deleteLast = () => (display.value = display.value.slice(0, -1));
+
+        // Calculate the Result (Prevents "undefined" or errors)
+        const calculateResult = () => {
+            try {
+                if (display.value === "") {
+                    display.value = "0"; // Prevents empty evaluation
+                    return;
+                }
+                const result = eval(display.value);
+                display.value = isFinite(result) ? result : "Error"; // Prevents division by zero
+            } catch {
+                display.value = "Error"; // Handles invalid input
+            }
+        };
+    </script>
+</body>
+</html>
